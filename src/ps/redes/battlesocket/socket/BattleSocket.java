@@ -41,6 +41,7 @@ public class BattleSocket {
         socketP2 = InetAddress.getByName(IP);
         
         server = new DatagramSocket(PORTA);
+        server.setReceiveBufferSize(32);
         
         DatagramPacket pacote = new DatagramPacket(str.getBytes(), str.getBytes().length, socketP2, PORTA);
         
@@ -56,6 +57,7 @@ public class BattleSocket {
         
         DatagramPacket pa = new DatagramPacket(mensagem, mensagem.length);
         
+        ponn:
         while (true) {
             
             try {
@@ -70,6 +72,8 @@ public class BattleSocket {
             
             if (hash.equals(str)) {
                 
+                System.out.println(hash);
+                
                 try {
                     
                     socketP1.send(pacote);
@@ -77,6 +81,9 @@ public class BattleSocket {
                 } catch (IOException ex) {
                     Logger.getLogger(BattleSocket.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                pacote = pa = null;
+                break ponn;
             }
         }
     }
