@@ -21,8 +21,8 @@ import java.util.logging.Logger;
  */
 public class BattleSocket {
     
-    private static final int PORTA = 2014;
-    private static final String IP = "127.0.0.1";
+    private static final int PORTA = 9199;
+    private static final String IP = "192.168.6.106";
     
     private DatagramSocket socketP1, server;
     private InetAddress socketP2;
@@ -86,5 +86,50 @@ public class BattleSocket {
                 break ponn;
             }
         }
+    }
+    
+    public void write(int linha, int coluna) {
+        
+        String str = linha + " " + coluna;
+        
+        DatagramPacket packet = new DatagramPacket(str.getBytes(), str.getBytes().length, socketP2, PORTA);
+        
+        try {
+            
+            socketP1.send(packet);
+            
+            read();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(BattleSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public int[] read() {
+        
+        byte[] r = new byte[4];
+        
+        DatagramPacket packet = new DatagramPacket(r, r.length);
+        
+        while (true) {
+            
+            try {
+                
+                server.receive(packet);
+                String str = new String(packet.getData());
+                
+                int move[] = new int[2];
+                move[0] = Integer.parseInt(str.substring(0, 1));
+                move[1] = Integer.parseInt(str.substring(1, 2));
+                
+                System.out.println("Adversário jogou: " + move[0] + " e " + move[1]);
+                
+                return move;
+                
+            } catch (IOException ex) {
+                Logger.getLogger(BattleSocket.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
     }
 }

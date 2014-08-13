@@ -24,7 +24,17 @@ public class Frame extends JFrame {
     
     private Tabuleiro tabuleiroP1, tabuleiroP2;
     
+    BattleSocket socket;
+    
     public Frame() {
+        
+        try {
+            socket = new BattleSocket();
+        } catch (SocketException ex) {
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         setLayout(new FlowLayout());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -34,10 +44,14 @@ public class Frame extends JFrame {
     
     private void initComponents() {
         
-        tabuleiroP1 = new Tabuleiro(11, 11, Color.BLUE, "Você");
-        tabuleiroP2 = new Tabuleiro(11, 11, Color.RED, "Adversário");
+        tabuleiroP1 = new Tabuleiro(11, 11, Color.BLUE, "Você", socket);
+        tabuleiroP2 = new Tabuleiro(11, 11, Color.RED, "Adversário", socket);
         add(tabuleiroP1);
         add(tabuleiroP2);
+        
+    }
+    
+    public void go() {
         
     }
     
@@ -47,14 +61,7 @@ public class Frame extends JFrame {
 
             public void run() {
                 
-                try {
-                    
-                    new Frame().setVisible(true);
-                    BattleSocket battleSocket = new BattleSocket();
-                    
-                } catch (SocketException | UnknownHostException ex) {
-                    Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new Frame().setVisible(true);
             }
         });
     }

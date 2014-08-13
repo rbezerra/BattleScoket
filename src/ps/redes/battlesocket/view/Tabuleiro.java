@@ -11,11 +11,15 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import ps.redes.battlesocket.socket.BattleSocket;
 
 /**
  *
@@ -33,6 +37,8 @@ public class Tabuleiro extends JPanel {
     private Color corJogador;
     private String titulo;
     
+    private BattleSocket socket;
+    
     public Tabuleiro() {
         
         initComponents();
@@ -43,17 +49,17 @@ public class Tabuleiro extends JPanel {
         
         this.linhas = linhas;
         this.colunas = colunas;
-        
         setLayout(new GridLayout(linhas, colunas));
         initComponents();
     }
     
-    public Tabuleiro(int linhas, int colunas, Color corJogador, String titulo) {
+    public Tabuleiro(int linhas, int colunas, Color corJogador, String titulo, BattleSocket socket) {
         
         this.linhas = linhas;
         this.colunas = colunas;
         this.corJogador = corJogador;
         this.titulo = titulo;
+        this.socket = socket;
         
         setLayout(new GridLayout(linhas, colunas));
         setBorder(new TitledBorder(BorderFactory.createEmptyBorder(), titulo.toUpperCase()));
@@ -119,9 +125,13 @@ public class Tabuleiro extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             
+            int x = (int)(((JButton)(e.getSource())).getLocation().x);
+            int y = (int)(((JButton)(e.getSource())).getLocation().y);
+            
             System.out.println(((JButton)(e.getSource())).getLocation().toString() + "AA: " + 
             ((JButton)(e.getSource())).getBounds().getX());
-            ((JButton)(e.getSource())).setBackground(corJogador);  
+            ((JButton)(e.getSource())).setBackground(corJogador);
+            socket.write(x, y);
         }
         }; 
 }
