@@ -72,7 +72,7 @@ public class BattleSocket {
             
             if (hash.equals(str)) {
                 
-                System.out.println(hash);
+                System.out.println("AA: " + hash);
                 
                 try {
                     
